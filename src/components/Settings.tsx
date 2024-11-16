@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Habit } from "./Habit";
+import { QRCodeCanvas as QRCode } from "qrcode.react";
+import copy from "copy-to-clipboard";
 
 export type TimerSetting = {
   name: string;
@@ -16,6 +18,7 @@ type SettingsProps = {
 const Settings = ({ timerSettings, updateSetting, habits }: SettingsProps) => {
   const [buttonText, setButtonText] = useState('Generate Transmission URL');
   const [buttonStyle, setButtonStyle] = useState('bg-orange-500 hover:bg-orange-600 active:bg-orange-500');
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
 
   const renderSetting = (setting: TimerSetting, index: number) => (
     <div key={index} className="flex flex-col mb-4">
@@ -51,19 +54,20 @@ const Settings = ({ timerSettings, updateSetting, habits }: SettingsProps) => {
     const urlWithQuery = `${baseUrl}?transmissionData=${encodedState}`;
 
     // Copy URL to clipboard
-    navigator.clipboard.writeText(urlWithQuery).then(() => {
-      // Change button to indicate success
-      setButtonText('Copied Transmission URL');
-      setButtonStyle('bg-green-500 hover:bg-green-600 active:bg-green-500');
+    const copiedSuccessfully = copy(urlWithQuery);
 
-      // Revert back after 2 seconds
+    if (copiedSuccessfully) {
+      setButtonText("Copied Transmission URL To Clipboard!");
+      setButtonStyle("bg-green-500 hover:bg-green-600 active:bg-green-500 animate-pulse");
+      setQrCodeUrl(urlWithQuery);
+
       setTimeout(() => {
-        setButtonText('Generate Transmission URL');
-        setButtonStyle('bg-orange-500 hover:bg-orange-600 active:bg-orange-500');
-      }, 2000);
-    }).catch(() => {
-      console.error('Failed to copy URL to clipboard');
-    });
+        setButtonText("Generate Transmission URL");
+        setButtonStyle("bg-orange-500 hover:bg-orange-600 active:bg-orange-500");
+      }, 3000);
+    } else {
+      console.error("Failed to copy URL to clipboard");
+    }
   };
 
 
@@ -87,6 +91,12 @@ const Settings = ({ timerSettings, updateSetting, habits }: SettingsProps) => {
       >
         {buttonText}
       </button>
+      {qrCodeUrl && (
+        <div className="mt-4">
+          <QRCode value={qrCodeUrl} size={200} />
+          <p className="mt-2 text-sm text-gray-600">Scan to load data on another device</p>
+        </div>
+      )}
     </div>
   );
 };
