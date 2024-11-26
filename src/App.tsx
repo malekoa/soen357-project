@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Settings, { TimerSetting } from './components/Settings';
 import Home from './components/Home';
 import HabitComponent, { Habit } from './components/Habit';
+import Logo from './assets/openpomo_logo.png'
 
 function App() {
   document.title = 'OpenPomo | A Privacy-First Pomodoro Timer & Habit Tracker';
@@ -124,7 +125,10 @@ function App() {
   return (
     <div className="flex flex-col w-screen">
       <div className="flex items-center justify-between w-full p-4 border-b h-14">
-        <div className="text-xl font-bold">OpenPomo</div>
+        <div className='flex items-center gap-2'>
+          <img className='w-10 h-10' src={Logo} alt="" />
+          <div className="text-xl font-bold">OpenPomo</div>
+        </div>
         <div className="flex gap-2">
           <button onClick={() => setCurrentSection('Timer')} className={`${currentSection === 'Timer' ? 'underline' : ''}`}>
             Timer
