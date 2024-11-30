@@ -44,7 +44,7 @@ const Home = ({ timerSettings }: HomeProps) => {
     <div className="p-6">
       <div className="text-center">
         <h3 className="text-xl font-bold">{phases[currentPhase]} Phase</h3>
-        <div className="my-4 text-4xl font-bold">{formatTime(timeLeft)}</div>
+        <div className="my-4 font-bold text-8xl">{formatTime(timeLeft)}</div>
         <div className="flex justify-center gap-4">
           <button
             onClick={() => setIsRunning(!isRunning)}
